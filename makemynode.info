@@ -1,0 +1,5 @@
+name = make my node
+description = make it
+package = custom
+core = 7.x
+files[] = makemynode.module

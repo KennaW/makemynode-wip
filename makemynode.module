@@ -1,0 +1,53 @@
+<?php
+/**
+ * Implement hook_enable()
+ */
+function makemynode_enable() {
+    drupal_set_message($message = t('The yourmodulename  module was successfully enabled.'), $type = 'status');
+    $node = new stdClass(); // We create a new node object
+    $node->type = "page"; // Or any other content type you want
+    $node->title = "Your title goes here";
+    $node->language = LANGUAGE_NONE; // Or any language code if Locale module is enabled. More on this below *
+    $node->path = array('alias' => 'your-node-path'); // Setting a node path
+    node_object_prepare($node); // Set some default values.
+    $node->uid = 1; // Or any id you wish
+    // Let's add standard body field
+    $node->body[$node->language][0]['value'] = 'This is a body text';
+    $node->body[$node->language][0]['summary'] = 'Here goes a summary';
+    $node->body[$node->language][0]['format'] = 'filtered_html'; // If field has a format, you need to define it. Here we define a default filtered_html format for a body field
+    $node = node_submit($node); // Prepare node for a submit
+    node_save($node); // After this call we'll get a nid
+}
+
+
+//
+//
+//// Let's create a managed object $comment = new stdClass(); // We create a new comment object
+//$comment->nid = $node->nid; // nid of a node you want to attach a comment to
+//$comment->cid = 0; // leave it as is
+//$comment->pid = 0; // parent comment id, 0 if none
+//$comment->uid = 1; // user's id, who left the comment
+//$comment->mail = 'email@example.com'; // user's email
+//$comment->name = 'User name'; // If user is authenticated you can omit this field, it will be auto-populated, if the user is anonymous and you want to name him somehow, input his name here
+//$comment->thread = '01/'; // OPTIONAL. If you need comments to be threaded you can fill this value. Otherwise omit it.
+//$comment->hostname = '127.0.01' // OPTIONAL. You can log poster's ip here
+//$comment->created = time(); // OPTIONAL. You can set any time you want here. Useful for backdated comments creation.
+//$comment->is_anonymous = 0; // leave it as is
+//$comment->homepage = ''; // you can add homepage URL here
+//$comment->status = COMMENT_PUBLISHED; // We auto-publish this comment
+//$comment->language = LANGUAGE_NONE; // The same as for a node
+//$comment->subject = 'Comment subject';
+//$comment->comment_body[$comment->language][0]['value'] = 'Comment body text'; // Everything here is pretty much like with a node
+//$comment->comment_body[$comment->language][0]['format'] = 'filtered_html';
+//$comment->field_custom_field_name[LANGUAGE_NONE][0]['value'] = &lsquo;Some value&rsquo;; // OPTIONAL. If your comment has a custom field attached it can added as simple as this // preparing a comment for a save
+//comment_submit($comment); // saving a comment
+//comment_save($comment);
+//
+//
+//
+//
+//$term = new stdClass();
+//$term->name = &lsquo;Term Name&rsquo;;
+//$term->vid = 1; // &lsquo;1&rsquo; is a vocabulary id you wish this term to assign to
+//$term->field_custom_field_name[LANGUAGE_NONE][0]['value'] = &lsquo;Some value&rsquo;; // OPTIONAL. If your term has a custom field attached it can added as simple as this
+//taxonomy_term_save($term); // Finally, save our term
